@@ -36,21 +36,25 @@ class Record:
         f.close()
         return x
 
+def gather_metadata(index_path: str, metadata_path: str):
+    '''Reads the index at `index_path` and gathers metadata for every file listed which is then written to a text file at `metadata_path`'''
+    pass
 
-def get_all_file_paths(root: str) -> typing.List:
-    '''Walks the file system starting from `root` and returns a list of all file paths'''
-    results = []
-    for dirpath, dirnames, filenames in os.walk(root):
+
+def build_index(index_file_name: str, root_path: str):
+    '''Walks the file system starting from `root_path` and generates a list of file paths which are then written to a text file at `index_file_name`'''
+    index_file = open(index_file_name, 'w')
+    for dirpath, dirnames, filenames in os.walk(root_path):
         for fname in filenames:
             fpath = os.path.join(dirpath, fname)
-            results.append(fpath)
-    return results
+            index_file.write(fpath + '\n')
+    index_file.close()
 
 
 def main():
-    paths = get_all_file_paths(TEST_PATH)
-    for p in paths:
-        print(Record.compute_hash(path=p))
+    now = dt.datetime.now().strftime('%Y-%m-%d-%H-%M')
+    index_file_name = now + '-index-file.txt'
+    build_index(index_file_name=index_file_name, root_path=TEST_PATH)
 
 
 if __name__ == '__main__':
